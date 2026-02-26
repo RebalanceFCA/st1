@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>鍼灸師のための「AI魔法の杖」入門編</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Old+Mincho:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* 配色設定: 墨黒×金茶 */
+        --primary-bg: #2c2c2c; /* 墨黒 - sumiguro */
+        --secondary-bg: #3d3d3d;
+
+        /* テキスト色（白文字系） */
+        --text-main: #f5f5f5; /* 明るい白灰色 */
+        --text-sub: #dcdcdc;
+        --text-dark: #333333; /* カード内の暗い文字用 */
+
+        /* 金茶（アクセント） */
+        --accent-gold: #d4a574; /* 金茶 - kincha */
+        --accent-light: #e8c9a0;
+        --accent-dark: #b8885a;
+
+        --paper-color: #ffffff; /* カード背景は白 */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Shippori Mincho', 'Zen Old Mincho', 'Yu Mincho', 'YuMincho', serif;
+        background-color: var(--primary-bg);
+        color: var(--text-main);
+        line-height: 1.8;
+        padding: 0;
+        font-size: 16px;
+        overflow-x: hidden;
+        /* 背景グラデーション（金茶の光） */
+        background-image: radial-gradient(circle at 50% 30%, rgba(212, 165, 116, 0.15) 0%, transparent 50%);
+      }
+
+      /* 和柄背景パターン（青海波風） */
+      .bg-pattern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 12.327 63.794 11 50 11c-13.693 0-15.89 1.229-25.478 5.928-.77.377-1.53.766-2.28 1.15.545.642 1.144 1.282 1.8 1.922H21.18zm-2.184 0h-3.32c-.818-.62-1.558-1.242-2.22-1.858-.454-.42-1.07-1.018-1.78-1.874l-1.68-.42V4.928C14.89 6.222 19.98 7.444 30.25 7.444c10.353 0 16.36-1.347 25.958-4.937l1.768.661c.368.138.731.272 1.088.402h-3.32c-.656-.64-1.255-1.28-1.8-1.922-.75-.384-1.51-.773-2.28-1.15C42.11 3.229 39.913 2 26.22 2 12.426 2 10.332 3.227 1.637 7.072 4.093 8.055 7.051 9.04 10 9.875V20h3.32c.656-.64 1.255-1.28 1.8-1.922.75-.384 1.51-.773 2.28-1.15C27.11 12.229 29.313 11 43.006 11c13.794 0 15.888 1.327 25.365 6.072-3.094 1.237-5.723 2.198-8.233 2.928h6.225c.881-.332 1.795-.689 2.75-1.072C79.638 15.222 84.729 14 95 14c10.353 0 16.36-1.347 25.958-4.937l1.768.661c.368.138.731.272 1.088.402h-3.32c-.656-.64-1.255-1.28-1.8-1.922-.75-.384-1.51-.773-2.28-1.15C107.11 3.229 104.913 2 91.22 2c-13.794 0-15.888 1.227-24.583 5.072C64.184 6.055 61.226 5.04 58.277 4.205V20h2.907zM95 0C84.316 0 79.237 1.222 69.97 4.928c-3.094 1.237-5.723 2.198-8.233 2.928V0h33.263z' fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+        position: relative;
+      }
+
+      /* ヘッダーエリア */
+      .header {
+        text-align: center;
+        margin-bottom: 60px;
+        position: relative;
+      }
+
+      .badge-container {
+        display: inline-block;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .badge {
+        /* 金茶グラデーション */
+        background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-gold) 50%, var(--accent-dark) 100%);
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        padding: 8px 24px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        border-radius: 4px;
+        box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        letter-spacing: 0.1em;
+        position: relative;
+        z-index: 2;
+      }
+
+      .badge::before {
+        content: '';
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        border: 1px solid var(--accent-gold);
+        z-index: -1;
+        opacity: 0.6;
+      }
+
+      .badge-sub {
+        display: block;
+        color: var(--accent-light); /* 明るい金茶色 */
+        font-size: 0.9rem;
+        letter-spacing: 0.2em;
+        margin-top: 10px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      h1.main-title {
+        font-size: 2.2rem;
+        color: var(--text-main);
+        margin: 20px 0 10px 0;
+        line-height: 1.4;
+        font-weight: 700;
+      }
+
+      p.subtitle {
+        font-size: 1.1rem;
+        color: var(--accent-light);
+        margin-top: 10px;
+        font-weight: 500;
+      }
+
+      h1.main-title span.highlight {
+        color: var(--text-main);
+        /* 金茶のアンダーライン風マーカー */
+        background: linear-gradient(to bottom, transparent 60%, rgba(212, 165, 116, 0.5) 60%);
+        padding: 0 5px;
+      }
+
+      /* コンテンツカード */
+      .content-card {
+        background-color: var(--paper-color);
+        border-radius: 2px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+        border-top: 4px solid var(--accent-gold);
+        color: var(--text-dark); /* カード内は黒文字 */
+      }
+
+      .content-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, transparent 50%, rgba(212, 165, 116, 0.1) 50%);
+        pointer-events: none;
+      }
+
+      /* 縦書き装飾 */
+      .vertical-deco {
+        position: absolute;
+        top: 40px;
+        right: 20px;
+        writing-mode: vertical-rl;
+        color: rgba(0, 0, 0, 0.05); /* 黒系の薄い色 */
+        font-size: 4rem;
+        font-family: 'Zen Old Mincho', serif;
+        font-weight: 900;
+        line-height: 1;
+        user-select: none;
+        pointer-events: none;
+      }
+
+      /* セクション見出し */
+      h2.section-title {
+        color: #4a4a4a; /* ダークグレー */
+        font-size: 1.8rem;
+        margin: 40px 0 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--accent-gold);
+        text-align: center;
+        font-weight: 700;
+        position: relative;
+      }
+
+      h2.section-title::after {
+        content: '◆';
+        position: absolute;
+        bottom: -11px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--paper-color);
+        padding: 0 10px;
+        color: var(--accent-gold);
+        font-size: 14px;
+      }
+
+      h3.sub-title {
+        color: #4a4a4a;
+        font-size: 1.4rem;
+        margin: 30px 0 20px;
+        padding-left: 15px;
+        border-left: 5px solid var(--accent-gold);
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+      }
+
+      p {
+        margin-bottom: 1.5em;
+        color: var(--text-dark);
+        text-align: justify;
+        line-height: 2;
+      }
+
+      /* 引用・対話ボックス */
+      .quote-box {
+        background-color: #fcfcfc;
+        border: 1px solid #e0e0e0;
+        padding: 25px;
+        margin: 30px 0;
+        border-radius: 4px;
+        position: relative;
+      }
+
+      .quote-box::before {
+        content: '"';
+        position: absolute;
+        top: -15px;
+        left: 20px;
+        font-size: 3rem;
+        color: var(--accent-gold);
+        background: #fcfcfc;
+        padding: 0 10px;
+        line-height: 1;
+        font-family: serif;
+      }
+
+      /* イントロダクション */
+      .intro-box {
+        background-color: #f9f9f9;
+        border: 1px solid #eeeeee;
+        padding: 30px;
+        margin-bottom: 40px;
+        position: relative;
+        border-left: 4px solid var(--accent-gold);
+      }
+
+      .intro-box p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* チェックリスト */
+      .check-list {
+        list-style: none;
+        margin: 30px 0;
+        padding: 25px;
+        background-color: rgba(212, 165, 116, 0.08);
+        border: 1px solid rgba(212, 165, 116, 0.2);
+      }
+
+      .check-list li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .check-list li:last-child {
+        margin-bottom: 0;
+      }
+
+      .check-icon {
+        color: var(--accent-gold);
+        margin-right: 10px;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      /* テーブル装飾 */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 30px 0;
+        font-size: 0.95rem;
+      }
+
+      .data-table th,
+      .data-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .data-table th {
+        background-color: rgba(212, 165, 116, 0.1);
+        color: #5d4037;
+        font-weight: 700;
+        border-bottom: 2px solid var(--accent-gold);
+      }
+
+      .data-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      /* 枠線装飾 */
+      .gold-border {
+        border: 1px solid var(--accent-gold);
+        padding: 20px;
+        margin: 30px 0;
+        position: relative;
+        background-color: #fffcf8;
+      }
+
+      .gold-border::before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        bottom: 4px;
+        border: 1px solid rgba(212, 165, 116, 0.3);
+        pointer-events: none;
+      }
+
+      .emphasis {
+        font-weight: 700;
+        color: var(--text-dark);
+        border-bottom: 1px dotted var(--text-dark);
+      }
+
+      /* フッター */
+      .footer {
+        text-align: center;
+        color: #ffffff; /* 白文字 */
+        font-size: 0.8rem;
+        margin-top: 40px;
+        padding-bottom: 40px;
+      }
+
+      /* 会話スタイル */
+      .chat-example {
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        font-family: sans-serif;
+      }
+      .chat-role {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+        font-size: 0.9em;
+      }
+      .chat-content {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #eee;
+        white-space: pre-wrap;
+      }
+
+      /* モバイル対応 */
+      @media (max-width: 768px) {
+        .content-card {
+          padding: 30px 20px;
+        }
+        h1.main-title {
+          font-size: 1.8rem;
+        }
+        h2.section-title {
+          font-size: 1.5rem;
+        }
+        .vertical-deco {
+          display: none;
+        }
+        .data-table {
+          font-size: 0.8rem;
+        }
+        .data-table th,
+        .data-table td {
+          padding: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-pattern"></div>
+
+    <div class="container">
+      <!-- ヘッダー -->
+      <header class="header">
+        <div class="badge-container">
+          <span class="badge">説明会参加特典1</span>
+        </div>
+        <h1 class="main-title">鍼灸師のための「AI魔法の杖」入門編</h1>
+        <p class="subtitle">〜救済の技術に「発信の力」を加え、選ばれる鍼灸院になる方法〜</p>
+      </header>
+
+      <!-- メインコンテンツ -->
+      <div class="content-card">
+        <div class="vertical-deco">AI革新</div>
+
+        <p>
+          もう、ITやSNSの「努力」で<br>
+          疲弊するのは終わりにしませんか？
+        </p>
+
+        <div class="quote-box">
+          <p>
+            「周りの鍼灸院はインスタやブログで上手く集客しているのに、自分は乗り遅れている……」
+          </p>
+
+          <p>
+            「集客が大事なのはわかっているけれど、<br>
+            パソコンの前に座るだけで頭が痛くなる……」
+          </p>
+        </div>
+
+        <p>
+          もし、先生がそんな焦りや劣等感を少しでも抱いているなら、このレポートは、「あなたへの逆転の招待状」になります。
+        </p>
+
+        <p>これまで、技術一筋で磨いてきた先生ほど、ITやSNSという「発信の壁」に苦しんできたのではないでしょうか…。</p>
+
+        <p>もし、そうだとしたらこの特典レポートはあなたのためのものです。</p>
+
+        <p>
+          なぜなら、「AI（人工知能）」が登場したことで2026年以降、競争が激しい業界で生き残っていくことは難しくなると予測できるからです。
+        </p>
+
+        <p>
+          このレポートでは、これからの新時代を生き抜く鍼灸師が、どうやってAIを簡単に味方につけ、ライバル院をごぼう抜きにして「地域で唯一選ばれる院」になれるのか、その方法をお伝えします。
+        </p>
+
+        <p>ぜひ、最後まで読んで明日からの鍼灸院経営に役立ててください。</p>
+
+        <h2 class="section-title">努力が報われない「IT格差」時代の終焉</h2>
+
+        <p>
+          これまで、集客力を上げるには「IT（Information Technology:情報技術）スキル」という高い壁がありました。例えば、
+        </p>
+
+        <ul class="check-list" style="background: none; border: none; padding-left: 0">
+          <li>何時間もかけてブログを書く。</li>
+          <li>毎日ネタを探してスマホと格闘する。</li>
+          <li>難しい解析ツールを使いこなす。</li>
+        </ul>
+
+        <p>
+          こうした我々鍼灸師の「職人の手」を止めてまで行わなければならなかった苦痛な作業を、これからは、すべてAIという「天才的な秘書」に任せることができます。
+        </p>
+
+        <p>
+          あなたが施術している間に、AIがあなたの代わりに考え、あなたの代わりに魅力的な文章や集客ネタを考え書き上げます。ITの知識があるかないかは、もはや成功に関係ありません。
+        </p>
+
+        <h2 class="section-title">
+          AIは「技術」ではありません、<br>普段患者さんと話しているような、<br>ただの「会話」なのです
+        </h2>
+
+        <p>「AIなんて、難しくて自分には無理だ」と避けてしまうのは、非常にもったいないです。</p>
+
+        <p>
+          なぜなら、AIを使いこなすのに必要なのはITスキルではなく、普段患者さんと話しているような「日常会話」だけだからです。そして、そこには３つの「不要」なものがありました。
+        </p>
+
+        <div class="gold-border">
+          <h3 class="sub-title" style="margin-top: 0; border: none; padding: 0">３つの「不要」</h3>
+          <ul class="check-list" style="background: none; border: none; padding: 0; margin: 10px 0">
+            <li><span class="check-icon">✅</span>専門的なプログラミングの知識は不要</li>
+            <li><span class="check-icon">✅</span>難しい設定作業も不要</li>
+            <li><span class="check-icon">✅</span>最新用語の暗記も不要</li>
+          </ul>
+        </div>
+
+        <p>
+          なのです。<br>
+          家族や友達とLINEをするような感覚で、例えば「1ヶ月分のインスタの投稿案を考えて」と伝えるだけで、AIは一瞬で最高の案を出してくれます。
+        </p>
+
+        <p>
+          これはもはやITスキルではありません。単に、「天才的で便利な秘書（AI）を使い倒すか、それとも一人で抱え込み続けるか」その選択の差でしかないのです。
+        </p>
+
+        <p>AIを使い倒し、AIを自由自在に扱い、自分の味方につける方法は、</p>
+
+        <h2 class="section-title">【実例】AIとの対話は、本当にこんなに簡単</h2>
+
+        <p>なのです。</p>
+
+        <p>「具体的にどんな感じで使うの？」という疑問にお答えするために、実際の対話例をご覧ください。</p>
+
+        <h3 class="sub-title">例１：Instagram投稿ネタ作成（わずか3秒）</h3>
+
+        <div class="chat-example">
+          <div class="chat-role">あなた：</div>
+          <div class="chat-content">「30代女性向けの美容鍼のインスタ投稿を3パターン考えて」</div>
+
+          <div class="chat-role">AI：</div>
+          <div class="chat-content">了解です✨
+30代女性に刺さりやすい「悩み共感 × 美容鍼のベネフィット」で、
+すぐ使えるインスタ投稿を3パターン用意しました。
+（キャプション想定／少し絵文字あり）
+
+①【たるみ・疲れ顔】共感型
+
+「最近、顔が疲れて見える…」
+
+鏡を見て
+「寝てるのに疲れて見える」
+「フェイスラインがぼやけてきた」
+そんな変化、感じてませんか？
+
+30代は
+✔ 仕事のストレス
+✔ 血行不良
+✔ 筋肉のコリ
+が顔に出やすい時期。
+
+美容鍼は
+・凝り固まった表情筋に直接アプローチ
+・血流UPでくすみ改善
+・フェイスラインすっきり✨
+
+"頑張ってる顔"から"余裕のある顔"へ。
+外側だけじゃなく、内側から整えませんか？
+#美容鍼 #30代美容 #たるみケア #疲れ顔改善 #自分メンテ
+
+②【肌質改善・ナチュラル志向】専門性＋安心感
+
+「スキンケア、ちゃんとしてるのに…」
+
+化粧水も美容液も
+ちゃんと選んでるのに
+✔ 肌がくすむ
+✔ ハリが戻らない
+✔ メイクノリが悪い
+
+それ、肌の土台＝血流と筋肉が原因かも。
+
+美容鍼は
+🪡 肌の内側の血流を促進
+🪡 コラーゲン生成をサポート
+🪡 自然なツヤとハリ感へ
+
+無理に引き上げない、
+「元の自分を底上げする美容」。
+
+30代からの"攻めすぎないケア"に選ばれています🌿
+#美容鍼灸 #肌質改善 #ナチュラル美容 #30代スキンケア
+
+③【忙しい女性向け】ライフスタイル訴求
+
+「自分のケア、後回しにしてない？」
+
+仕事・家事・人付き合い…
+気づいたら
+自分のことは一番最後。
+
+30代は
+"疲れ"がそのまま顔に出やすい世代。
+
+美容鍼は
+✔ 短時間でも効果を感じやすい
+✔ 肌×表情筋×自律神経にアプローチ
+✔ 施術後のスッキリ感が違う✨
+
+「時間をかける美容」より
+「効率よく整える美容」を。
+
+忙しいあなたの
+月1メンテナンスにおすすめです。
+#働く女性美容 #30代ケア #美容鍼 #ご褒美時間 #メンテナンス美容</div>
+        </div>
+
+        <p>このようにすぐ使えるInstagram投稿ネタをわずか3秒で作成してくれます。</p>
+
+        <p>
+          他にも、地域のライバル院との価格調査をする際に、ライバル院のホームページからコピペするだけで簡単に見やすく表にできます。
+        </p>
+
+        <h3 class="sub-title">例2：ライバル院の価格調査（わずか10秒）</h3>
+
+        <div class="chat-example">
+          <div class="chat-role">あなた：</div>
+          <div class="chat-content">「以下の競合院情報を比較表にして」（HPから料金をコピペ）</div>
+
+          <div class="chat-role">AI：</div>
+          <div class="chat-content">「以下、比較表と分析結果です。平均価格は11,050円。価格帯の空白地帯は12,000円〜14,000円です。ですので、13,800円での価格帯を推奨します。」</div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>院名</th>
+              <th>施術時間</th>
+              <th>初回料金</th>
+              <th>通常料金</th>
+              <th>特徴・ポジション</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A鍼灸院</td>
+              <td>60分</td>
+              <td>5,500円</td>
+              <td>8,800円</td>
+              <td>地域密着型の標準的な美容鍼</td>
+            </tr>
+            <tr>
+              <td>B鍼灸サロン</td>
+              <td>90分</td>
+              <td>9,800円</td>
+              <td>15,000円</td>
+              <td>高級感重視のエステ併用型</td>
+            </tr>
+            <tr>
+              <td>C鍼灸院</td>
+              <td>45分</td>
+              <td>4,980円</td>
+              <td>6,600円</td>
+              <td>回転数重視の低価格メニュー</td>
+            </tr>
+            <tr style="background-color: #fffcf0; font-weight: bold">
+              <td>貴院（想定）</td>
+              <td>60分</td>
+              <td>ー</td>
+              <td>13,800円</td>
+              <td>一般的な美容鍼</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          AIなら、あなたの手を煩わすことなく、これだけの分析をたった10秒で作成してくれるので、ライバル院との比較分析にも役立ちます。
+        </p>
+
+        <h2 class="section-title">AIを味方に付ければ<br>数年分の「遅れ」を1ヶ月で帳消にできる</h2>
+
+        <p>
+          何年も前からコツコツとブログやSNSを続けてきたライバル院に、今から追いつくのは普通なら不可能かもしれません。しかし、AIを使えば「時間の概念」が変わっていくでしょう。
+        </p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>作業内容</th>
+              <th>従来のやり方（人間）</th>
+              <th>最新のやり方（AI活用）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SNS1ヶ月分のネタ</td>
+              <td>毎日ネタ探しに必死</td>
+              <td>1分くらいで30日分完成</td>
+            </tr>
+            <tr>
+              <td>ブログ執筆</td>
+              <td>1記事に2時間</td>
+              <td>たったの3分くらいで完成</td>
+            </tr>
+            <tr>
+              <td>チラシ案作成</td>
+              <td>1日かけて悩む</td>
+              <td>30秒くらいで10案提示</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>ライバル院が必死に集客に奔走している横を、あなたは「最新のジェット機」で飛び越していくような感覚です。</p>
+
+        <p>
+          ITやSNSで後れを取っていた人ほど、AIという魔法の杖を使うことで、今まで集客にかけていた時間を取り戻し、あなたの時間に余裕ができます。そして、その空いた時間で治療に専念できるので鍼灸院の売上アップにも繋がります。
+        </p>
+
+        <p>そんな大逆転のチャンスが、今まさにあなたの目の前にあるのです。</p>
+
+        <h2 class="section-title">明日から始められる「AI活用3ステップ」</h2>
+
+        <div class="gold-border">
+          <ol style="margin-left: 20px; color: var(--text-dark); font-weight: 700">
+            <li style="margin-bottom: 15px">
+              ChatGPTに無料登録（所要時間約3分）<br>
+              <span style="font-weight: 400; font-size: 0.9em">https://chat.openai.com にアクセスして登録するだけ。</span>
+            </li>
+            <li style="margin-bottom: 15px">
+              特典２の秘密の呪文（プロンプト例）を使ってみる（所要時間約5分）<br>
+              <span style="font-weight: 400; font-size: 0.9em">配布した「秘密の呪文」をコピペして貼り付けるだけ。</span>
+            </li>
+            <li>
+              出力結果を自院用にアレンジ（所要時間約10分）<br>
+              <span style="font-weight: 400; font-size: 0.9em">院名や具体的な価格を入れ、先生自身の言葉を添えるだけ。</span>
+            </li>
+          </ol>
+        </div>
+
+        <p>
+          今までブログやInstagram投稿文、チラシ案などを作成するのに１、２時間かかっていたことが、たった20分ほどで集客ネタが完成します。
+        </p>
+
+        <p>
+          AIを使わない選択肢はないと思いませんか…？<br>
+          これからは、空いた時間で技術向上や治療に専念できます。
+        </p>
+
+        <p>
+          ただし、AIから出力された情報や文章を発信する場合は、そのまま鵜呑みにするのはちょっと危険ですので気をつけてください。
+        </p>
+
+        <p>
+          なぜなら、出力内容が薬機法など著作権に触れる恐れがあるからです。その点は自分で調べておく必要がありますが、それもAIに聞いてみても良いでしょう。
+        </p>
+
+        <h2 class="section-title">よくある誤解と知っておくべき注意点とは？</h2>
+
+        <div class="intro-box">
+          <p>
+            <strong>誤解1：丸投げでOK？</strong><br>
+            → AIは「優秀な秘書」です。薬機法違反や著作権に触れていないか、最終チェックはあなたが行ってください。
+          </p>
+
+          <p>
+            <strong>誤解2:すぐに爆発的集客ができる?</strong><br>
+            → AIは「時間短縮ツール」です。作業時間を削り、<br>
+            発信頻度と質を上げることで、結果として集客力が高まります。
+          </p>
+
+          <p>
+            <strong>注意：個人情報は入れない</strong><br>
+            → 患者さんの実名は伏せ、「30代女性」などの属性で入力した方が良いでしょう。
+          </p>
+        </div>
+
+        <h2 class="section-title">あなたの真価は「発信」ではなく「救済」です。</h2>
+
+        <p>ただ、あなたの本業はスマホやパソコンを叩くことではなく、患者さんを治療してその人生を輝かせることです。</p>
+
+        <p>
+          AIという「魔法の杖」を手に入れる最大のメリットは、集客が楽になることだけではありません。「本来、先生が向き合うべき患者さんとの時間」や「大切な家族との時間」を取り戻せることにあります。
+        </p>
+
+        <p>集客にかかる時間はAIに任せ、あなたは「救済の技術」を磨くことだけに集中する。</p>
+
+        <p>それこそが、2026年以降に勝ち残る、新しい鍼灸師の姿です。</p>
+
+        <h2 class="section-title">おわりに<br>ITが苦手だからこそ、最大のチャンス</h2>
+
+        <p>昨日までブログを1本も書いたことがない先生が、明日には月間30本の記事を作成できる。それがAI時代の現実です。</p>
+
+        <p>
+          技術一筋で磨いてきた先生の「救済の力」に、AIという「発信の力」が加われば、どれだけの患者さんを救えるでしょうか。
+        </p>
+
+        <p>
+          リバランス整顔美容鍼で一緒に患者さんを救っていきましょう。<br>
+          その未来への第一歩を、今日から踏み出してください。
+        </p>
+
+        <p>あなたの成功を、心から応援しています。</p>
+      </div>
+
+      <footer class="footer">
+        <p>© 2026 リバランス整顔美容鍼. All Rights Reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>
